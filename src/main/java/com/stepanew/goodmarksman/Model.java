@@ -21,17 +21,18 @@ public class Model {
     final double ARROW_WIDTH = 5;
     final double ARROW_Y = 154;
     final double ARROW_X_START = -27;
-    final double LEFT_X = 50;
+    final double LEFT_X = 300;
     final double CIRCLE_Y = 120;
-    final double LEFT_RADIUS = 18;
-    final double RIGHT_RADIUS = 9;
-    final double RIGHT_X = 100;
+    final double LEFT_RADIUS = 60;
+    final double RIGHT_RADIUS = 30;
+    final double RIGHT_X = 350;
 
 
     public Model(){
         this.leftCircle = new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS);
         this.rigthCircle = new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS);
         this.arrow = new Line(ARROW_X_START, ARROW_Y, ARROW_X_START + ARROW_LENGTH, ARROW_Y);
+        System.out.println(arrow.getEndX());
         this.shotCounter = 0;
         setColors();
     }

@@ -22,25 +22,22 @@ public class GameBoardView {
     Label shotLabel;
 
     @FXML
-    Pane circlesPane;
-
-    @FXML
-    Pane arrowsPane;
+    Pane gameBoard;
 
     public void displayCircle(Circle circle){
-        circlesPane.getChildren().add(circle);
+        gameBoard.getChildren().add(circle);
     }
 
     public void displayArrow(Line arrow){
-        arrowsPane.getChildren().add(arrow);
+        gameBoard.getChildren().add(arrow);
     }
 
-    public void clearCirclesPane(){
-        circlesPane.getChildren().clear();
+    protected void clearCirclesPane(Circle circle){
+        gameBoard.getChildren().remove(circle);
     }
 
-    public void clearArrowsPane(){
-        arrowsPane.getChildren().clear();
+    public void clearArrowsPane(Line arrow){
+        gameBoard.getChildren().remove(arrow);
     }
 
     public void displayShotLabel(int shotCounter){
