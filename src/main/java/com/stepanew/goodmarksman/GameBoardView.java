@@ -24,31 +24,31 @@ public class GameBoardView {
     @FXML
     Pane gameBoard;
 
-    public void displayCircle(Circle circle){
+    public void displayCircle(Circle circle) {
         gameBoard.getChildren().add(circle);
     }
 
-    public void displayArrow(Line arrow){
+    public void displayArrow(Line arrow) {
         gameBoard.getChildren().add(arrow);
     }
 
-    protected void clearCirclesPane(Circle circle){
+    protected void clearCirclesPane(Circle circle) {
         gameBoard.getChildren().remove(circle);
     }
 
-    public void clearArrowsPane(Line arrow){
+    public void clearArrowsPane(Line arrow) {
         gameBoard.getChildren().remove(arrow);
     }
 
-    public void displayShotLabel(int shotCounter){
+    public void displayShotLabel(int shotCounter) {
         shotLabel.setText(Integer.toString(shotCounter));
     }
 
-    public void displayScoreLabel(int scoreCounter){
+    public void displayScoreLabel(int scoreCounter) {
         playerScoreLabel.setText(Integer.toString(scoreCounter));
     }
 
-    public void resetScores(){
+    public void resetScores() {
         playerScoreLabel.setText("0");
         shotLabel.setText("0");
     }

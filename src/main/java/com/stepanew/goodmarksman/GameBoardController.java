@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class GameBoardController extends GameBoardView{
+public class GameBoardController extends GameBoardView {
 
     final static double CIRCLE_LEFT_SPEED = 2.5;
     final static int FRAME = 16;
@@ -43,7 +43,9 @@ public class GameBoardController extends GameBoardView{
                     });
                     try {
                         Thread.sleep(FRAME);
-                    } catch (InterruptedException e) {}
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             thread.start();
@@ -66,8 +68,8 @@ public class GameBoardController extends GameBoardView{
         displayCircle(model.getRigthCircle());
     }
 
-    private void moveArrow(){
-        if(IS_ARROW_LAUNCHED) {
+    private void moveArrow() {
+        if (IS_ARROW_LAUNCHED) {
             clearArrowsPane(model.getArrow());
             model.moveArrow(ARROW_SPEED);
             displayArrow(model.getArrow());
@@ -84,14 +86,14 @@ public class GameBoardController extends GameBoardView{
     }
 
 
-    private boolean checkBorder(Circle circle){
+    private boolean checkBorder(Circle circle) {
         return circle.getCenterY() - circle.getRadius() <= CIRCLES_PANE_LOW_HEIGHT
                 || circle.getCenterY() + circle.getRadius() >= CIRCLES_PANE_HIGH_HEIGHT;
     }
 
     @FXML
     void shoot() {
-        if(!IS_ARROW_LAUNCHED) {
+        if (!IS_ARROW_LAUNCHED) {
             incrementShots();
             IS_ARROW_LAUNCHED = true;
         }
@@ -113,17 +115,17 @@ public class GameBoardController extends GameBoardView{
         displayShotLabel(model.incrementShotCounter());
     }
 
-    private void incrementScore(int score){
+    private void incrementScore(int score) {
         displayScoreLabel(model.incrementScoreCounter(score));
     }
 
-    private boolean checkIntersection(){
+    private boolean checkIntersection() {
         double distanceToLeft = Math.sqrt(
                 Math.pow(model.getLeftCenterX() - model.getArrowEndX(), 2)
                         + Math.pow(model.getLeftCenterY() - model.getArrowEndY(), 2)
         );
 
-        if(distanceToLeft <= model.getLEFT_RADIUS()){
+        if (distanceToLeft <= model.getLEFT_RADIUS()) {
             incrementScore(LEFT_CIRCLE_VALUE);
             return true;
         }
@@ -133,7 +135,7 @@ public class GameBoardController extends GameBoardView{
                         + Math.pow(model.getRightCenterY() - model.getArrowEndY(), 2)
         );
 
-        if(distanceToRight <= model.getRIGHT_RADIUS()){
+        if (distanceToRight <= model.getRIGHT_RADIUS()) {
             incrementScore(RIGHT_CIRCLE_VALUE);
             return true;
         }
@@ -141,7 +143,7 @@ public class GameBoardController extends GameBoardView{
         return false;
     }
 
-    private void clearCirclesPane(){
+    private void clearCirclesPane() {
         super.clearCirclesPane(model.getLeftCircle());
         super.clearCirclesPane(model.getRigthCircle());
     }

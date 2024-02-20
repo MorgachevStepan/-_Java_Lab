@@ -28,11 +28,10 @@ public class Model {
     final double RIGHT_X = 350;
 
 
-    public Model(){
+    public Model() {
         this.leftCircle = new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS);
         this.rigthCircle = new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS);
         this.arrow = new Line(ARROW_X_START, ARROW_Y, ARROW_X_START + ARROW_LENGTH, ARROW_Y);
-        System.out.println(arrow.getEndX());
         this.shotCounter = 0;
         setColors();
     }
@@ -46,39 +45,39 @@ public class Model {
         arrow.setStrokeWidth(ARROW_WIDTH);
     }
 
-    public void setLeftCenterY(double yCoordinate){
+    public void setLeftCenterY(double yCoordinate) {
         leftCircle.setCenterY(yCoordinate);
     }
 
-    public void setRightCenterY(double yCoordinate){
+    public void setRightCenterY(double yCoordinate) {
         rigthCircle.setCenterY(yCoordinate);
     }
 
-    public double getLeftCenterY(){
+    public double getLeftCenterY() {
         return leftCircle.getCenterY();
     }
 
-    public double getRightCenterY(){
+    public double getRightCenterY() {
         return rigthCircle.getCenterY();
     }
 
-    public double getLeftCenterX(){
+    public double getLeftCenterX() {
         return leftCircle.getCenterX();
     }
 
-    public double getRightCenterX(){
+    public double getRightCenterX() {
         return rigthCircle.getCenterX();
     }
 
-    public double getArrowEndX(){
+    public double getArrowEndX() {
         return arrow.getEndX();
     }
 
-    public double getArrowEndY(){
+    public double getArrowEndY() {
         return arrow.getEndY();
     }
 
-    public void moveArrow(double deltaX){
+    public void moveArrow(double deltaX) {
         arrow.setStartX(arrow.getStartX() + deltaX);
         arrow.setEndX(arrow.getEndX() + deltaX);
     }
