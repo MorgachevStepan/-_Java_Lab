@@ -7,9 +7,6 @@ import javafx.scene.shape.Circle;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class GameBoardController extends GameBoardView {
@@ -25,9 +22,7 @@ public class GameBoardController extends GameBoardView {
     static short DIRECTION_LEFT = 1;
     static short DIRECTION_RIGHT = 1;
 
-
     Model model;
-    ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     public GameBoardController() {
         this.model = new Model();
@@ -56,12 +51,12 @@ public class GameBoardController extends GameBoardView {
 
     private void moveCircles() {
         clearCirclesPane();
-        model.setLeftCenterY(model.getLeftCenterY() - CIRCLE_LEFT_SPEED * DIRECTION_LEFT);
+        model.moveLeftCircle(CIRCLE_LEFT_SPEED * DIRECTION_LEFT);
         if (checkBorder(model.getLeftCircle())) {
             DIRECTION_LEFT *= -1;
         }
 
-        model.setRightCenterY(model.getRightCenterY() - CIRCLE_RIGHT_SPEED * DIRECTION_RIGHT);
+        model.moveRightCircle(CIRCLE_RIGHT_SPEED * DIRECTION_RIGHT);
         if (checkBorder(model.getRigthCircle())) {
             DIRECTION_RIGHT *= -1;
         }
@@ -103,14 +98,12 @@ public class GameBoardController extends GameBoardView {
 
     @FXML
     void reset() {
-        threadPool.shutdown();
         IS_ARROW_LAUNCHED = false;
         IS_GAME_STARTED = false;
         clearArrowsPane(model.getArrow());
         clearCirclesPane();
         resetScores();
         model = new Model();
-        threadPool = Executors.newFixedThreadPool(10);
     }
 
     private void incrementShots() {

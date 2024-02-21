@@ -14,6 +14,7 @@ public class GameBoardView {
     final static double CIRCLES_PANE_HIGH_HEIGHT = 330.0;
     final static double CIRCLES_PANE_LOW_HEIGHT = 20.0;
     final static double ARROWS_PANE_END = 400.0;
+    final static String DEFAULT_VALUE = "0";
 
     @FXML
     Label playerScoreLabel;
@@ -49,8 +50,8 @@ public class GameBoardView {
     }
 
     public void resetScores() {
-        playerScoreLabel.setText("0");
-        shotLabel.setText("0");
+        playerScoreLabel.setText(DEFAULT_VALUE);
+        shotLabel.setText(DEFAULT_VALUE);
     }
 
 }

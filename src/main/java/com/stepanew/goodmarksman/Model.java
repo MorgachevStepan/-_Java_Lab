@@ -45,14 +45,6 @@ public class Model {
         arrow.setStrokeWidth(ARROW_WIDTH);
     }
 
-    public void setLeftCenterY(double yCoordinate) {
-        leftCircle.setCenterY(yCoordinate);
-    }
-
-    public void setRightCenterY(double yCoordinate) {
-        rigthCircle.setCenterY(yCoordinate);
-    }
-
     public double getLeftCenterY() {
         return leftCircle.getCenterY();
     }
@@ -80,6 +72,14 @@ public class Model {
     public void moveArrow(double deltaX) {
         arrow.setStartX(arrow.getStartX() + deltaX);
         arrow.setEndX(arrow.getEndX() + deltaX);
+    }
+
+    public void moveLeftCircle(double deltaY) {
+        leftCircle.setCenterY(leftCircle.getCenterY() - deltaY);
+    }
+
+    public void moveRightCircle(double deltaY){
+        rigthCircle.setCenterY(rigthCircle.getCenterY() - deltaY);
     }
 
     public void resetArrowCoordinates() {

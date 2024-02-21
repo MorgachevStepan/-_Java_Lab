@@ -12,6 +12,7 @@ public class MainApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 600, 420);
         stage.setTitle("Good Marksman");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
