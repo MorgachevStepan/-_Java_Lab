@@ -2,6 +2,7 @@ package com.stepanew.goodmarksman;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import lombok.extern.slf4j.Slf4j;
 import javafx.scene.shape.Circle;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -10,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Slf4j
 public class GameBoardController extends GameBoardView {
 
     final static double CIRCLE_LEFT_SPEED = 2.5;
@@ -44,7 +46,7 @@ public class GameBoardController extends GameBoardView {
                     try {
                         Thread.sleep(FRAME);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error(e.getMessage());
                     }
                 }
             });
