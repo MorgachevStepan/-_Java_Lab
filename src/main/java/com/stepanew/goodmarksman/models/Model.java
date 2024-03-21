@@ -1,4 +1,4 @@
-package com.stepanew.goodmarksman;
+package com.stepanew.goodmarksman.models;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -14,8 +14,7 @@ public class Model {
     Line arrow;
     Circle leftCircle;
     Circle rigthCircle;
-    int shotCounter;
-    int scoreCounter;
+    PlayerInfo playerInfo;
 
     final double ARROW_LENGTH = 60;
     final double ARROW_WIDTH = 5;
@@ -32,7 +31,7 @@ public class Model {
         this.leftCircle = new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS);
         this.rigthCircle = new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS);
         this.arrow = new Line(ARROW_X_START, ARROW_Y, ARROW_X_START + ARROW_LENGTH, ARROW_Y);
-        this.shotCounter = 0;
+        this.playerInfo = new PlayerInfo("Default");
         setColors();
     }
 
@@ -88,12 +87,13 @@ public class Model {
     }
 
     public int incrementShotCounter() {
-        return ++shotCounter;
+        playerInfo.setShotCounter(playerInfo.getShotCounter() + 1);
+        return playerInfo.getShotCounter();
     }
 
     public int incrementScoreCounter(int score) {
-        scoreCounter += score;
-        return scoreCounter;
+        playerInfo.setScoreCounter(playerInfo.getScoreCounter() + score);
+        return playerInfo.getScoreCounter();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.stepanew.goodmarksman;
 
+import com.stepanew.goodmarksman.models.Model;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,13 @@ public class GameBoardController extends GameBoardView {
     Model model;
     ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
-    public GameBoardController() {
+/*    public GameBoardController() {
         this.model = new Model();
+    }*/
+
+    public void initialize(){
+        this.model = new Model();
+        addPlayerInfo(model.getPlayerInfo());
     }
 
     @FXML
@@ -113,11 +119,11 @@ public class GameBoardController extends GameBoardView {
     }
 
     private void incrementShots() {
-        displayShotLabel(model.incrementShotCounter());
+        PlayerInfoController.setShotCounter(getPlayersInfo().get(0) ,model.incrementShotCounter());
     }
 
     private void incrementScore(int score) {
-        displayScoreLabel(model.incrementScoreCounter(score));
+        PlayerInfoController.setScoreCounter(getPlayersInfo().get(0) ,model.incrementScoreCounter(score));
     }
 
     private boolean checkIntersection() {
@@ -147,6 +153,11 @@ public class GameBoardController extends GameBoardView {
     private void clearCirclesPane() {
         super.clearCirclesPane(model.getLeftCircle());
         super.clearCirclesPane(model.getRigthCircle());
+    }
+
+    private void resetScores() {
+        PlayerInfoController.setShotCounter(getPlayersInfo().get(0), 0);
+        PlayerInfoController.setScoreCounter(getPlayersInfo().get(0) , 0);
     }
 
 }

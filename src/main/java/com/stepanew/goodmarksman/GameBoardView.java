@@ -1,13 +1,18 @@
 package com.stepanew.goodmarksman;
 
+import com.stepanew.goodmarksman.models.PlayerInfo;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GameBoardView {
 
@@ -15,12 +20,15 @@ public class GameBoardView {
     final static double CIRCLES_PANE_LOW_HEIGHT = 20.0;
     final static double ARROWS_PANE_END = 400.0;
     final static String DEFAULT_VALUE = "0";
+    final ArrayList<VBox> playersInfo = new ArrayList<>();
 
-    @FXML
+/*    @FXML
     Label playerScoreLabel;
 
     @FXML
-    Label shotLabel;
+    Label shotLabel;*/
+    @FXML
+    VBox infoBox;
 
     @FXML
     Pane gameBoard;
@@ -41,17 +49,10 @@ public class GameBoardView {
         gameBoard.getChildren().remove(arrow);
     }
 
-    public void displayShotLabel(int shotCounter) {
-        shotLabel.setText(Integer.toString(shotCounter));
-    }
-
-    public void displayScoreLabel(int scoreCounter) {
-        playerScoreLabel.setText(Integer.toString(scoreCounter));
-    }
-
-    public void resetScores() {
-        playerScoreLabel.setText(DEFAULT_VALUE);
-        shotLabel.setText(DEFAULT_VALUE);
+    public void addPlayerInfo(PlayerInfo playerInfo){
+        VBox newVBox = PlayerInfoController.createPlayerInfoVBox(playerInfo);
+        infoBox.getChildren().add(newVBox);
+        playersInfo.add(newVBox);
     }
 
 }

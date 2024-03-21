@@ -7,5 +7,7 @@ module com.stepanew.goodmarksman {
 
     opens com.stepanew.goodmarksman to javafx.fxml;
     exports com.stepanew.goodmarksman;
+    exports com.stepanew.goodmarksman.models;
+    opens com.stepanew.goodmarksman.models to javafx.fxml;
 }
 

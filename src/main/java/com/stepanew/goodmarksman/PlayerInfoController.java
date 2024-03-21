@@ -32,22 +32,22 @@ public class PlayerInfoController {
         scoreCounterText.getStyleClass().add("text");
 
         vBox.getChildren().add(playerNameLabel);
-        vBox.getChildren().add(shotCounterLabel);
-        vBox.getChildren().add(scoreCounterLabel);
         vBox.getChildren().add(playerNameText);
+        vBox.getChildren().add(shotCounterLabel);
         vBox.getChildren().add(shotCounterText);
+        vBox.getChildren().add(scoreCounterLabel);
         vBox.getChildren().add(scoreCounterText);
 
         return vBox;
     }
 
     public static void setPlayerName (VBox vBox, String playerName){
-        Text text = (Text) vBox.getChildren().get(3);
+        Text text = (Text) vBox.getChildren().get(1);
         text.setText(playerName);
     }
 
     public static void setShotCounter (VBox vBox, int shotCounter){
-        Text text = (Text) vBox.getChildren().get(4);
+        Text text = (Text) vBox.getChildren().get(3);
         text.setText(Integer.toString(shotCounter));
     }
 

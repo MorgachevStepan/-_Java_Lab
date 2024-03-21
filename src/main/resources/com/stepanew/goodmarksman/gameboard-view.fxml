@@ -1,30 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Polygon?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.stepanew.goodmarksman.GameBoardController">
    <children>
-      <AnchorPane layoutX="469.0" prefHeight="342.0" prefWidth="131.0">
-         <children>
-            <Label layoutX="14.0" layoutY="33.0" text="Player`s score:">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="playerScoreLabel" layoutX="14.0" layoutY="69.0" text="0" />
-            <Label layoutX="14.0" layoutY="97.0" text="Shots:">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="shotLabel" layoutX="14.0" layoutY="132.0" text="0" />
-         </children>
-      </AnchorPane>
       <AnchorPane layoutY="326.0" prefHeight="74.0" prefWidth="600.0">
          <children>
             <Button fx:id="startGameButton" layoutX="37.0" layoutY="25.0" mnemonicParsing="false" onAction="#startGame" text="Start game" />
@@ -34,5 +17,6 @@
       </AnchorPane>
       <Polygon fill="DODGERBLUE" layoutX="64.0" layoutY="191.0" points="-50.0, 40.0, -25.800018310546875, -17.400009155273438, -50.0, -71.80000305175781" stroke="BLACK" strokeType="INSIDE" />
       <Pane fx:id="gameBoard" layoutX="72.0" layoutY="20.0" prefHeight="310.0" prefWidth="395.0" />
+      <VBox fx:id="infoBox" layoutX="467.0" layoutY="26.0" prefHeight="304.0" prefWidth="100.0" />
    </children>
 </AnchorPane>
