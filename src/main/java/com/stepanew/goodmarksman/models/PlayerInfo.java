@@ -16,4 +16,8 @@ public class PlayerInfo {
         this.playerName = playerName;
     }
 
+    public void incrementShots() {
+        shotCounter++;
+    }
+
 }

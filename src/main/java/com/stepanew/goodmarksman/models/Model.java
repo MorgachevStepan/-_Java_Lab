@@ -24,6 +24,11 @@ public class Model {
     List<Circle> targetList;
     List<Line> arrowList;
     List<PlayerInfo> playerList;
+    List<String> readyList;
+    List<String> waitingList;
+    List<String> shootingList;
+
+    volatile boolean IS_GAME_RESET = true;
 
 
     final double ARROW_LENGTH = 60;
@@ -51,6 +56,9 @@ public class Model {
         targetList = new ArrayList<>();
         arrowList = new ArrayList<>();
         playerList = new ArrayList<>();
+        readyList = new ArrayList<>();
+        shootingList = new ArrayList<>();
+        waitingList = new ArrayList<>();
         targetList.add(new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS));
         targetList.add(new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS));
         updateArrowsPosition();
@@ -132,11 +140,57 @@ public class Model {
     }
 
     public void ready(Server server, String playerName) {
+        if(readyList.isEmpty()) {
+            readyList.add(playerName);
+            return;
+        }
+
+        if(readyList.contains(playerName)) {
+            readyList.remove(playerName);
+        } else {
+            readyList.add(playerName);
+        }
+
+        if(playerList.size() > 1 && readyList.size() == playerList.size()) {
+            IS_GAME_RESET = false;
+            startGame(server);
+        }
+    }
+
+    private void startGame(Server server) {
     }
 
     public void requestShoot(String playerName) {
+        if (IS_GAME_RESET) {
+            return;
+        }
+
+        PlayerInfo info = playerList.stream()
+                .filter(clientData -> clientData.getPlayerName().equals(playerName))
+                .findFirst()
+                .orElse(null);
+        assert info != null;
+
+        if(!shootingList.contains(info.getPlayerName())) {
+            shootingList.add(info.getPlayerName());
+            info.incrementShots();
+        }
     }
 
     public void requestStop(String playerName) {
+        if(IS_GAME_RESET) {
+            return;
+        }
+
+        if(waitingList.contains(playerName)) {
+            waitingList.remove(playerName);
+            if (waitingList.size() == 0) {
+                synchronized (this) {
+                    notifyAll();
+                }
+            }
+        } else {
+            waitingList.add(playerName);
+        }
     }
 }
