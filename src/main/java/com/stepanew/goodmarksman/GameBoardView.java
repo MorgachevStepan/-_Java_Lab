@@ -22,11 +22,6 @@ public class GameBoardView {
     final static String DEFAULT_VALUE = "0";
     final ArrayList<VBox> playersInfo = new ArrayList<>();
 
-/*    @FXML
-    Label playerScoreLabel;
-
-    @FXML
-    Label shotLabel;*/
     @FXML
     VBox infoBox;
 
