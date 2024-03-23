@@ -1,6 +1,7 @@
 package com.stepanew.goodmarksman;
 
 import com.stepanew.goodmarksman.models.Model;
+import com.stepanew.goodmarksman.models.ModelBuilder;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +30,9 @@ public class GameBoardController extends GameBoardView {
     Model model;
     ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
-/*    public GameBoardController() {
-        this.model = new Model();
-    }*/
 
     public void initialize(){
-        this.model = new Model();
+        this.model = ModelBuilder.build();
         addPlayerInfo(model.getPlayerInfo());
     }
 

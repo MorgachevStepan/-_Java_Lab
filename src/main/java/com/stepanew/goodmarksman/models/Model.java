@@ -1,11 +1,15 @@
 package com.stepanew.goodmarksman.models;
 
+import com.stepanew.goodmarksman.server.Server;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -15,10 +19,17 @@ public class Model {
     Circle leftCircle;
     Circle rigthCircle;
     PlayerInfo playerInfo;
+    String winner;
+
+    List<Circle> targetList;
+    List<Line> arrowList;
+    List<PlayerInfo> playerList;
+
 
     final double ARROW_LENGTH = 60;
     final double ARROW_WIDTH = 5;
     final double ARROW_Y = 154;
+    final double Y_BOUND = 310;
     final double ARROW_X_START = -27;
     final double LEFT_X = 300;
     final double CIRCLE_Y = 120;
@@ -33,6 +44,25 @@ public class Model {
         this.arrow = new Line(ARROW_X_START, ARROW_Y, ARROW_X_START + ARROW_LENGTH, ARROW_Y);
         this.playerInfo = new PlayerInfo("Default");
         setColors();
+    }
+
+    public void initialize() {
+        winner = null;
+        targetList = new ArrayList<>();
+        arrowList = new ArrayList<>();
+        playerList = new ArrayList<>();
+        targetList.add(new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS));
+        targetList.add(new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS));
+        updateArrowsPosition();
+    }
+
+    private synchronized void updateArrowsPosition() {
+        arrowList.clear();
+        int clientsCounter = playerList.size();
+        for (int i = 1; i <= clientsCounter; i++) {
+            double step = Y_BOUND / (clientsCounter + 1);
+            arrowList.add(new Line(ARROW_X_START, step * i, ARROW_X_START + ARROW_LENGTH, step * i));
+        }
     }
 
     private void setColors() {
@@ -96,4 +126,17 @@ public class Model {
         return playerInfo.getScoreCounter();
     }
 
+    public void addPlayer(PlayerInfo playerInfo) {
+        playerList.add(playerInfo);
+        this.updateArrowsPosition();
+    }
+
+    public void ready(Server server, String playerName) {
+    }
+
+    public void requestShoot(String playerName) {
+    }
+
+    public void requestStop(String playerName) {
+    }
 }
