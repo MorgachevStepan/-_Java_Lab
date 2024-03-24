@@ -1,0 +1,10 @@
+.player-client {
+    -fx-background-insets: 10 ;
+    -fx-background-color: red;
+    -fx-shape: 'M 0 0 25 200 0 400 z';
+}
+.player-connect {
+    -fx-background-insets: 10 ;
+    -fx-background-color: blue;
+    -fx-shape: 'M 0 0 25 200 0 400 z';
+}

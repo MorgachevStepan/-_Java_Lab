@@ -23,8 +23,8 @@ public class Model {
     PlayerInfo playerInfo;
     String winner;
 
-    List<Circle> targetList;
-    List<Line> arrowList;
+    List<Point> targetList;
+    List<Point> arrowList;
     List<PlayerInfo> playerList;
     List<String> readyList;
     List<String> waitingList;
@@ -67,8 +67,8 @@ public class Model {
     }
 
     public void initialize() {
-        targetList.add(new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS));
-        targetList.add(new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS));
+        targetList.add(new Point(LEFT_X, CIRCLE_Y, LEFT_RADIUS));
+        targetList.add(new Point(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS));
         updateArrowsPosition();
     }
 
@@ -77,7 +77,7 @@ public class Model {
         int clientsCounter = playerList.size();
         for (int i = 1; i <= clientsCounter; i++) {
             double step = Y_BOUND / (clientsCounter + 1);
-            arrowList.add(new Line(ARROW_X_START, step * i, ARROW_X_START + ARROW_LENGTH, step * i));
+            arrowList.add(new Point(ARROW_X_START, step * i, ARROW_WIDTH));
         }
     }
 

@@ -7,7 +7,6 @@ import com.stepanew.goodmarksman.server.SocketMessageWrapper;
 import com.stepanew.goodmarksman.server.response.ServerResponse;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -20,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.Objects;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -85,8 +84,9 @@ public class StartPageController {
     void openGamePage() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameboard-view.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            Parent root1 = fxmlLoader.load();
             Scene scene = new Scene(root1, 1100, 660);
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
             Stage stage = new Stage();
             stage.setResizable(true);
             stage.setTitle("Java Shooter Game.");

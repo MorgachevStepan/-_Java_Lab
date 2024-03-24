@@ -4,23 +4,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Polygon?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.stepanew.goodmarksman.GameBoardController">
-   <children>
-      <AnchorPane layoutY="326.0" prefHeight="74.0" prefWidth="600.0">
-         <children>
-            <Button fx:id="startGameButton" layoutX="37.0" layoutY="25.0" mnemonicParsing="false" onAction="#startGame" text="Start game" />
-            <Button fx:id="shootButton" layoutX="225.0" layoutY="24.0" mnemonicParsing="false" onAction="#shoot" text="Shoot" />
-            <Button fx:id="resetGameButton" layoutX="134.0" layoutY="25.0" mnemonicParsing="false" onAction="#reset" text="Reset game" />
-         </children>
-      </AnchorPane>
-      <Polygon fill="DODGERBLUE" layoutX="64.0" layoutY="191.0" points="-50.0, 40.0, -25.800018310546875, -17.400009155273438, -50.0, -71.80000305175781" stroke="BLACK" strokeType="INSIDE" />
-      <Pane fx:id="gameBoard" layoutX="72.0" layoutY="20.0" prefHeight="310.0" prefWidth="395.0" />
-      <VBox fx:id="infoBox" layoutX="467.0" layoutY="26.0" prefHeight="304.0" prefWidth="100.0" />
-      <VBox prefWidth="100"
-            alignment="CENTER"
-            fx:id="playersBox">
-      </VBox>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.stepanew.goodmarksman.GameBoardController">
+   <AnchorPane layoutY="326.0" prefHeight="74.0" prefWidth="600.0">
+      <Button fx:id="startGameButton" layoutX="37.0" layoutY="25.0" mnemonicParsing="false" onAction="#startGame"
+              text="Start game"/>
+      <Button fx:id="shootButton" layoutX="225.0" layoutY="24.0" mnemonicParsing="false" onAction="#shoot"
+              text="Shoot"/>
+      <Button fx:id="resetGameButton" layoutX="134.0" layoutY="25.0" mnemonicParsing="false" onAction="#reset"
+              text="Reset game"/>
+   </AnchorPane>
+   <!--<Polygon fill="DODGERBLUE" layoutX="64.0" layoutY="191.0" points="-50.0, 40.0, -25.800018310546875, -17.400009155273438, -50.0, -71.80000305175781" stroke="BLACK" strokeType="INSIDE" />-->
+   <Pane fx:id="gameBoard" layoutX="72.0" layoutY="20.0" prefHeight="310.0" prefWidth="395.0"/>
+   <VBox fx:id="infoBox" layoutX="467.0" layoutY="26.0" prefHeight="304.0" prefWidth="100.0"/>
+   <VBox prefWidth="100"
+         alignment="CENTER"
+         fx:id="playersBox">
+   </VBox>
 </AnchorPane>

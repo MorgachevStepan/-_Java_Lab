@@ -37,11 +37,10 @@ public class GameBoardController extends GameBoardView implements IObserver {
 
     Model model;
     ExecutorService threadPool = Executors.newFixedThreadPool(2);
-    SocketMessageWrapper socketMessageWrapper;
     String playerName;
-    List<Button> players;
-    List<VBox> playersInfo;
-    List<Circle> targets;
+    final List<Button> players;
+    final List<VBox> playersInfo;
+    final List<Circle> targets;
     {
         players = new ArrayList<>();
         playersInfo = new ArrayList<>();
@@ -177,14 +176,13 @@ public class GameBoardController extends GameBoardView implements IObserver {
     }
 
     public void dataInit(SocketMessageWrapper socketMessageWrapper, String playersName) {
-        this.socketMessageWrapper = socketMessageWrapper;
         this.playerName = playersName;
     }
 
     @Override
     public void update() {
         checkWinner();
-        updateCircles(model.getTargetList());
+        //updateCircles(model.getTargetList());
         updatePlayerInfo(model.getPlayerList());
         System.out.println("-----------" + model.getPlayerList().size());
         updatePlayers(model.getPlayerList());
