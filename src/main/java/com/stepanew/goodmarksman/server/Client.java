@@ -38,6 +38,11 @@ public class Client implements Runnable {
         serverResponse.setLineList(model.getArrowList());
         serverResponse.setWinner(model.getWinner());
 
+        System.out.println(serverResponse.getWinner());
+        System.out.println(serverResponse.getLineList());
+        System.out.println(serverResponse.getPlayerInfoList());
+        System.out.println(serverResponse.getCircleList());
+        System.out.println("Before write data: " + gson.toJson(serverResponse));
         socketMessageWrapper.writeData(gson.toJson(serverResponse));
     }
 

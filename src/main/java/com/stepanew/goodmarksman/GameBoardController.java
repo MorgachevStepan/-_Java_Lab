@@ -2,19 +2,27 @@ package com.stepanew.goodmarksman;
 
 import com.stepanew.goodmarksman.models.Model;
 import com.stepanew.goodmarksman.models.ModelBuilder;
+import com.stepanew.goodmarksman.models.PlayerInfo;
+import com.stepanew.goodmarksman.server.IObserver;
+import com.stepanew.goodmarksman.server.SocketMessageWrapper;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import lombok.extern.slf4j.Slf4j;
 import javafx.scene.shape.Circle;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
-public class GameBoardController extends GameBoardView {
+public class GameBoardController extends GameBoardView implements IObserver {
 
     final static double CIRCLE_LEFT_SPEED = 2.5;
     final static int FRAME = 16;
@@ -29,11 +37,21 @@ public class GameBoardController extends GameBoardView {
 
     Model model;
     ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    SocketMessageWrapper socketMessageWrapper;
+    String playerName;
+    List<Button> players;
+    List<VBox> playersInfo;
+    List<Circle> targets;
+    {
+        players = new ArrayList<>();
+        playersInfo = new ArrayList<>();
+        targets = new ArrayList<>();
+    }
 
 
     public void initialize(){
         this.model = ModelBuilder.build();
-        addPlayerInfo(model.getPlayerInfo());
+        model.addObserver(this);
     }
 
     @FXML
@@ -158,4 +176,92 @@ public class GameBoardController extends GameBoardView {
         PlayerInfoController.setScoreCounter(getPlayersInfo().get(0) , 0);
     }
 
+    public void dataInit(SocketMessageWrapper socketMessageWrapper, String playersName) {
+        this.socketMessageWrapper = socketMessageWrapper;
+        this.playerName = playersName;
+    }
+
+    @Override
+    public void update() {
+        checkWinner();
+        updateCircles(model.getTargetList());
+        updatePlayerInfo(model.getPlayerList());
+        System.out.println("-----------" + model.getPlayerList().size());
+        updatePlayers(model.getPlayerList());
+    }
+
+    private void updatePlayers(List<PlayerInfo> playerList) {
+        if (playerList == null || playerList.size() == 0 || players.size() == playerList.size()) {
+            return;
+        }
+        Platform.runLater(() -> {
+            for(int i = 0; i < playerList.size(); i++) {
+                if (i >= players.size()) {
+                    Button button = new Button();
+                    button.setPrefHeight(140);
+                    button.setPrefWidth(140); //TODO вынести в константу
+
+                    if (playerList.get(i).getPlayerName().equals(playerName)) {
+                        button.getStyleClass().add("player-client");
+                        button.setText("Вы");
+                    } else {
+                        button.getStyleClass().add("player-connect");
+                    }
+
+                    players.add(button);
+                    addPlayersBox(button);
+                }
+            }
+        });
+    }
+
+    private void updatePlayerInfo(List<PlayerInfo> playerList) {
+        if(playerList == null || playerList.size() == 0) {
+            System.out.println(playerName + "Bad time");
+            return;
+        }
+        Platform.runLater(() -> {
+            System.out.println("in");
+            for (int i = 0; i < playerList.size(); i++) {
+                if (i >= players.size()) {
+                    VBox vBox = PlayerInfoController.createPlayerInfoVBox(playerList.get(i));
+                    playersInfo.add(vBox);
+                    System.out.println("New vbox");
+                    addPlayerInfo(vBox);
+                } else {
+                    PlayerInfoController.setPlayerName(playersInfo.get(i), playerList.get(i).getPlayerName());
+                    PlayerInfoController.setShotCounter(playersInfo.get(i), playerList.get(i).getShotCounter());
+                    PlayerInfoController.setScoreCounter(playersInfo.get(i), playerList.get(i).getScoreCounter());
+                }
+            }
+        });
+
+    }
+
+    private void updateCircles(List<Circle> targetList) {
+        if (targetList == null || targetList.size() == 0) {
+            return;
+        }
+        Platform.runLater(() -> {
+            for(int i = 0; i < targetList.size(); i++) {
+                if (i >= targets.size()) {
+                    Circle circle = targetList.get(i);
+                    circle.getStyleClass().add("targets");
+                    targets.add(circle);
+                }
+            }
+        });
+    }
+
+    private void checkWinner() {
+        if(model.getWinner() != null) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("У нас есть победитель!");
+                alert.setHeaderText("У нас есть победитель!");
+                alert.setContentText("Победитель : " + ((model.getWinner()).equals(this.playerName) ? "Вы" : model.getWinner()) + "!");
+                alert.showAndWait();  
+            });
+        }
+    }
 }

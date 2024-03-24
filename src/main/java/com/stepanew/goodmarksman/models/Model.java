@@ -1,5 +1,7 @@
 package com.stepanew.goodmarksman.models;
 
+import com.stepanew.goodmarksman.GameBoardController;
+import com.stepanew.goodmarksman.server.IObserver;
 import com.stepanew.goodmarksman.server.Server;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -27,6 +29,7 @@ public class Model {
     List<String> readyList;
     List<String> waitingList;
     List<String> shootingList;
+    List<IObserver> observerList;
 
     volatile boolean IS_GAME_RESET = true;
 
@@ -42,23 +45,28 @@ public class Model {
     final double RIGHT_RADIUS = 30;
     final double RIGHT_X = 350;
 
-
-    public Model() {
-        this.leftCircle = new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS);
-        this.rigthCircle = new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS);
-        this.arrow = new Line(ARROW_X_START, ARROW_Y, ARROW_X_START + ARROW_LENGTH, ARROW_Y);
-        this.playerInfo = new PlayerInfo("Default");
-        setColors();
-    }
-
-    public void initialize() {
+    {
         winner = null;
+        playerInfo = null;
         targetList = new ArrayList<>();
         arrowList = new ArrayList<>();
         playerList = new ArrayList<>();
         readyList = new ArrayList<>();
         shootingList = new ArrayList<>();
         waitingList = new ArrayList<>();
+        observerList = new ArrayList<>();
+    }
+
+
+    public Model() {
+/*        this.leftCircle = new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS);
+        this.rigthCircle = new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS);
+        this.arrow = new Line(ARROW_X_START, ARROW_Y, ARROW_X_START + ARROW_LENGTH, ARROW_Y);
+        this.playerInfo = new PlayerInfo("Default");
+        setColors();*/
+    }
+
+    public void initialize() {
         targetList.add(new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS));
         targetList.add(new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS));
         updateArrowsPosition();
@@ -158,6 +166,14 @@ public class Model {
     }
 
     private void startGame(Server server) {
+        Thread thread = new Thread(
+                () -> {
+                    while (true) {
+                        server.broadcast();
+                    }
+                }
+        );
+        thread.start();
     }
 
     public void requestShoot(String playerName) {
@@ -192,5 +208,15 @@ public class Model {
         } else {
             waitingList.add(playerName);
         }
+    }
+
+    public void update() {
+        for(IObserver observer: observerList) {
+            observer.update();
+        }
+    }
+
+    public void addObserver(GameBoardController gameBoardController) {
+        observerList.add(gameBoardController);
     }
 }

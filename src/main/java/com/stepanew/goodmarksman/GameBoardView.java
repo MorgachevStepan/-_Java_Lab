@@ -2,6 +2,7 @@ package com.stepanew.goodmarksman;
 
 import com.stepanew.goodmarksman.models.PlayerInfo;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -28,6 +29,9 @@ public class GameBoardView {
     @FXML
     Pane gameBoard;
 
+    @FXML
+    VBox playersBox;
+
     public void displayCircle(Circle circle) {
         gameBoard.getChildren().add(circle);
     }
@@ -44,10 +48,12 @@ public class GameBoardView {
         gameBoard.getChildren().remove(arrow);
     }
 
-    public void addPlayerInfo(PlayerInfo playerInfo){
-        VBox newVBox = PlayerInfoController.createPlayerInfoVBox(playerInfo);
-        infoBox.getChildren().add(newVBox);
-        playersInfo.add(newVBox);
+    public void addPlayerInfo(VBox vBox){
+        infoBox.getChildren().add(vBox);
+    }
+
+    public void addPlayersBox(Button button) {
+        playersBox.getChildren().add(button);
     }
 
 }
