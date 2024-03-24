@@ -85,7 +85,7 @@ public class StartPageController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gameboard-view.fxml"));
             Parent root1 = fxmlLoader.load();
-            Scene scene = new Scene(root1, 600, 420);
+            Scene scene = new Scene(root1, 900, 620);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
             Stage stage = new Stage();
             stage.setResizable(false);

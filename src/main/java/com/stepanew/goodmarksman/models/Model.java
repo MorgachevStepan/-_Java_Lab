@@ -3,7 +3,6 @@ package com.stepanew.goodmarksman.models;
 import com.stepanew.goodmarksman.GameBoardController;
 import com.stepanew.goodmarksman.server.IObserver;
 import com.stepanew.goodmarksman.server.Server;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import lombok.AccessLevel;
@@ -37,10 +36,10 @@ public class Model {
     final double ARROW_LENGTH = 60;
     final double ARROW_WIDTH = 5;
     final double ARROW_Y = 154;
-    final double Y_BOUND = 310;
-    final double ARROW_X_START = -27;
+    final double Y_BOUND = 520;
+    final double ARROW_X_START = 40;
     final double LEFT_X = 300;
-    final double CIRCLE_Y = 120;
+    final double CIRCLE_Y = 260;
     final double LEFT_RADIUS = 60;
     final double RIGHT_RADIUS = 30;
     final double RIGHT_X = 350;
@@ -57,15 +56,6 @@ public class Model {
         observerList = new ArrayList<>();
     }
 
-
-    public Model() {
-/*        this.leftCircle = new Circle(LEFT_X, CIRCLE_Y, LEFT_RADIUS);
-        this.rigthCircle = new Circle(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS);
-        this.arrow = new Line(ARROW_X_START, ARROW_Y, ARROW_X_START + ARROW_LENGTH, ARROW_Y);
-        this.playerInfo = new PlayerInfo("Default");
-        setColors();*/
-    }
-
     public void initialize() {
         targetList.add(new Point(LEFT_X, CIRCLE_Y, LEFT_RADIUS));
         targetList.add(new Point(RIGHT_X, CIRCLE_Y, RIGHT_RADIUS));
@@ -77,17 +67,8 @@ public class Model {
         int clientsCounter = playerList.size();
         for (int i = 1; i <= clientsCounter; i++) {
             double step = Y_BOUND / (clientsCounter + 1);
-            arrowList.add(new Point(ARROW_X_START, step * i, ARROW_WIDTH));
+            arrowList.add(new Point(ARROW_X_START, step * i, ARROW_LENGTH));
         }
-    }
-
-    private void setColors() {
-        leftCircle.setFill(Color.RED);
-        leftCircle.setStroke(Color.BLACK);
-        rigthCircle.setFill(Color.RED);
-        rigthCircle.setStroke(Color.BLACK);
-        arrow.setStroke(Color.BLACK);
-        arrow.setStrokeWidth(ARROW_WIDTH);
     }
 
     public double getLeftCenterY() {

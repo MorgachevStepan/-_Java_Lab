@@ -1,6 +1,5 @@
 package com.stepanew.goodmarksman;
 
-import com.stepanew.goodmarksman.models.PlayerInfo;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
@@ -34,6 +33,10 @@ public class GameBoardView {
 
     public void displayCircle(Circle circle) {
         gameBoard.getChildren().add(circle);
+    }
+
+    public void removeCircle() {
+        gameBoard.getChildren().remove(gameBoard.getChildren().size() - 1);
     }
 
     public void displayArrow(Line arrow) {
