@@ -111,11 +111,11 @@ public class Model {
     }
 
     public void moveLeftCircle(double deltaY) {
-        leftCircle.setCenterY(leftCircle.getCenterY() - deltaY);
+        targetList.get(0).setYCoordinate(targetList.get(0).getYCoordinate() - deltaY);
     }
 
     public void moveRightCircle(double deltaY){
-        rigthCircle.setCenterY(rigthCircle.getCenterY() - deltaY);
+        targetList.get(1).setYCoordinate(targetList.get(1).getYCoordinate() - deltaY);
     }
 
     public void resetArrowCoordinates() {
@@ -193,20 +193,7 @@ public class Model {
                                 manageShot(point, player);
                             }
                         }
-                        Point bigCircle = targetList.get(0);
-                        Point smallCircle = targetList.get(1);
-
-                        if (smallCircle.getYCoordinate() <= smallCircle.getRadius() ||
-                            Y_BOUND - smallCircle.getYCoordinate() <= smallCircle.getRadius()) {
-                            DIRECTION_RIGHT *= -1;
-                        }
-                        smallCircle.setYCoordinate(smallCircle.getYCoordinate() + CIRCLE_RIGHT_SPEED * DIRECTION_RIGHT);
-
-                        if (bigCircle.getYCoordinate() <= bigCircle.getRadius() ||
-                                Y_BOUND - bigCircle.getYCoordinate() <= bigCircle.getRadius()) {
-                            DIRECTION_LEFT *= -1;
-                        }
-                        bigCircle.setYCoordinate(bigCircle.getYCoordinate() + CIRCLE_LEFT_SPEED * DIRECTION_LEFT);
+                        moveCircles();
 
                         server.broadcast();
 
@@ -219,6 +206,27 @@ public class Model {
                 }
         );
         thread.start();
+    }
+
+    private void moveCircles() {
+        Point leftCircle = targetList.get(0);
+        Point rightCircle = targetList.get(1);
+
+        if (checkBorder(rightCircle)) {
+            DIRECTION_RIGHT *= -1;
+        }
+        moveRightCircle(CIRCLE_RIGHT_SPEED * DIRECTION_RIGHT);
+
+        if (checkBorder(leftCircle)) {
+            DIRECTION_LEFT *= -1;
+        }
+
+        moveLeftCircle(CIRCLE_LEFT_SPEED * DIRECTION_LEFT);
+    }
+
+    private boolean checkBorder(Point circle) {
+        return circle.getYCoordinate() <= circle.getRadius()
+                || Y_BOUND - circle.getYCoordinate() <= circle.getRadius();
     }
 
     private synchronized void manageShot(Point point, PlayerInfo player) {

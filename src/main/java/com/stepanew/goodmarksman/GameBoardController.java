@@ -84,22 +84,6 @@ public class GameBoardController extends GameBoardView implements IObserver {
         sendRequest(new ClientRequest(ClientActions.READY));
     }
 
-    private void moveCircles() {
-        clearCirclesPane();
-        model.moveLeftCircle(CIRCLE_LEFT_SPEED * DIRECTION_LEFT);
-        if (checkBorder(model.getLeftCircle())) {
-            DIRECTION_LEFT *= -1;
-        }
-
-        model.moveRightCircle(CIRCLE_RIGHT_SPEED * DIRECTION_RIGHT);
-        if (checkBorder(model.getRigthCircle())) {
-            DIRECTION_RIGHT *= -1;
-        }
-
-        displayCircle(model.getLeftCircle());
-        displayCircle(model.getRigthCircle());
-    }
-
     private void moveArrow() {
         if (IS_ARROW_LAUNCHED) {
             clearArrowsPane(model.getArrow());
@@ -117,37 +101,14 @@ public class GameBoardController extends GameBoardView implements IObserver {
         IS_ARROW_LAUNCHED = false;
     }
 
-
-    private boolean checkBorder(Circle circle) {
-        return circle.getCenterY() - circle.getRadius() <= CIRCLES_PANE_LOW_HEIGHT
-                || circle.getCenterY() + circle.getRadius() >= CIRCLES_PANE_HIGH_HEIGHT;
-    }
-
     @FXML
     void shoot() {
-/*        if (!IS_ARROW_LAUNCHED) {
-            incrementShots();
-            IS_ARROW_LAUNCHED = true;
-        }*/
         sendRequest(new ClientRequest(ClientActions.SHOOT));
     }
 
     @FXML
     void pause() {
-/*        threadPool.shutdown();
-        IS_ARROW_LAUNCHED = false;
-        IS_GAME_STARTED = false;
-        clearArrowsPane(model.getArrow());
-        clearCirclesPane();
-        resetScores();
-        model = new Model();
-        clearCirclesPane();
-        threadPool = Executors.newFixedThreadPool(2);*/
         sendRequest(new ClientRequest(ClientActions.STOP));
-    }
-
-    private void incrementShots() {
-        PlayerInfoController.setShotCounter(getPlayersInfo().get(0) ,model.incrementShotCounter());
     }
 
     private void incrementScore(int score) {
@@ -176,16 +137,6 @@ public class GameBoardController extends GameBoardView implements IObserver {
         }
 
         return false;
-    }
-
-    private void clearCirclesPane() {
-        super.clearCirclesPane(model.getLeftCircle());
-        super.clearCirclesPane(model.getRigthCircle());
-    }
-
-    private void resetScores() {
-        PlayerInfoController.setShotCounter(getPlayersInfo().get(0), 0);
-        PlayerInfoController.setScoreCounter(getPlayersInfo().get(0) , 0);
     }
 
     public void dataInit(SocketMessageWrapper socketMessageWrapper, String playersName) {
