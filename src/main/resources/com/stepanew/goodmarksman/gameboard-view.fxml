@@ -6,6 +6,7 @@
 
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Line?>
 <BorderPane xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.stepanew.goodmarksman.GameBoardController">
@@ -42,26 +43,44 @@
          />
       </HBox>
    </bottom>
-   <!--<Polygon fill="DODGERBLUE" layoutX="64.0" layoutY="191.0" points="-50.0, 40.0, -25.800018310546875, -17.400009155273438, -50.0, -71.80000305175781" stroke="BLACK" strokeType="INSIDE" />-->
    <center>
       <Pane
            fx:id="gameBoard"
            layoutX="72.0"
            layoutY="20.0"
            prefHeight="310.0"
-           prefWidth="395.0"
-      />
+           styleClass="with-borders"
+           prefWidth="395.0">
+         <Line
+                 startX="400.0"
+                 endX="400.0"
+                 endY="520.0"
+                 opacity="0.7"
+                 stroke="#8B0000"
+                 strokeLineCap="BUTT"
+                 strokeWidth="4.0"/>
+         <Line
+                 startX="450.0"
+                 endX="450.0"
+                 endY="520.0"
+                 opacity="0.7"
+                 stroke="#8B0000"
+                 strokeLineCap="BUTT"
+                 strokeWidth="4.0"/>
+      </Pane>
    </center>
    <right>
       <VBox
               fx:id="infoBox"
               prefWidth="250.0"
-              alignment="TOP_CENTER"
+              alignment="TOP_RIGHT"
+              styleClass="with-borders"
       />
    </right>
    <left>
       <VBox
               prefWidth="100"
+              styleClass="player-zone"
               alignment="CENTER"
               fx:id="playersBox"
       />

@@ -31,11 +31,11 @@ public class Model {
     final double ARROW_Y = 154;
     final double Y_BOUND = 520;
     final double ARROW_X_START = 40;
-    final double LEFT_X = 300;
+    final double LEFT_X = 400;
     final double CIRCLE_Y = 260;
     final double LEFT_RADIUS = 60;
     final double RIGHT_RADIUS = 30;
-    final double RIGHT_X = 350;
+    final double RIGHT_X = 450;
     final double CIRCLE_LEFT_SPEED = 2.5;
     final int FRAME = 16;
     final double CIRCLE_RIGHT_SPEED = 5.0;
