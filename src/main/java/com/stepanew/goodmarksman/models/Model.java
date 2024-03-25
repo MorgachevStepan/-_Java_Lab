@@ -3,8 +3,6 @@ package com.stepanew.goodmarksman.models;
 import com.stepanew.goodmarksman.GameBoardController;
 import com.stepanew.goodmarksman.server.IObserver;
 import com.stepanew.goodmarksman.server.Server;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -16,9 +14,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Model {
 
-    Line arrow;
-    Circle leftCircle;
-    Circle rigthCircle;
     PlayerInfo playerInfo;
     String winner;
 
@@ -48,8 +43,6 @@ public class Model {
     final int LEFT_CIRCLE_VALUE = 5;
     final int RIGHT_CIRCLE_VALUE = 25;
     final int WINNER_SCORE = 50;
-    boolean IS_ARROW_LAUNCHED = false;
-    boolean IS_GAME_STARTED = false;
     short DIRECTION_LEFT = 1;
     short DIRECTION_RIGHT = 1;
     final double ARROWS_PANE_END = 400.0;
@@ -81,56 +74,12 @@ public class Model {
         }
     }
 
-    public double getLeftCenterY() {
-        return leftCircle.getCenterY();
-    }
-
-    public double getRightCenterY() {
-        return rigthCircle.getCenterY();
-    }
-
-    public double getLeftCenterX() {
-        return leftCircle.getCenterX();
-    }
-
-    public double getRightCenterX() {
-        return rigthCircle.getCenterX();
-    }
-
-    public double getArrowEndX() {
-        return arrow.getEndX();
-    }
-
-    public double getArrowEndY() {
-        return arrow.getEndY();
-    }
-
-    public void moveArrow(double deltaX) {
-        arrow.setStartX(arrow.getStartX() + deltaX);
-        arrow.setEndX(arrow.getEndX() + deltaX);
-    }
-
     public void moveLeftCircle(double deltaY) {
         targetList.get(0).setYCoordinate(targetList.get(0).getYCoordinate() - deltaY);
     }
 
-    public void moveRightCircle(double deltaY){
+    public void moveRightCircle(double deltaY) {
         targetList.get(1).setYCoordinate(targetList.get(1).getYCoordinate() - deltaY);
-    }
-
-    public void resetArrowCoordinates() {
-        arrow.setStartX(ARROW_X_START);
-        arrow.setEndX(ARROW_X_START + ARROW_LENGTH);
-    }
-
-    public int incrementShotCounter() {
-        playerInfo.setShotCounter(playerInfo.getShotCounter() + 1);
-        return playerInfo.getShotCounter();
-    }
-
-    public int incrementScoreCounter(int score) {
-        playerInfo.setScoreCounter(playerInfo.getScoreCounter() + score);
-        return playerInfo.getScoreCounter();
     }
 
     public void addPlayer(PlayerInfo playerInfo) {
@@ -139,18 +88,18 @@ public class Model {
     }
 
     public void ready(Server server, String playerName) {
-        if(readyList.isEmpty()) {
+        if (readyList.isEmpty()) {
             readyList.add(playerName);
             return;
         }
 
-        if(readyList.contains(playerName)) {
+        if (readyList.contains(playerName)) {
             readyList.remove(playerName);
         } else {
             readyList.add(playerName);
         }
 
-        if(playerList.size() > 1 && readyList.size() == playerList.size()) {
+        if (playerList.size() > 1 && readyList.size() == playerList.size()) {
             IS_GAME_RESET = false;
             startGame(server);
         }
@@ -174,24 +123,7 @@ public class Model {
                             }
                         }
                         if (shootingList.size() != 0) {
-                            for (int i = 0; i < shootingList.size(); i++) {
-                                if (shootingList.get(i) == null) {
-                                    break;
-                                }
-                                int finalI = i;
-                                PlayerInfo player = playerList.stream()
-                                        .filter(
-                                                data -> data.getPlayerName()
-                                                        .equals(
-                                                                shootingList.get(finalI)
-                                                        )
-                                        ).findFirst()
-                                        .orElse(null);
-                                int index = playerList.indexOf(player);
-                                Point point = arrowList.get(index);
-                                point.setXCoordinate(point.getXCoordinate() + ARROW_SPEED);
-                                manageShot(point, player);
-                            }
+                            shoot();
                         }
                         moveCircles();
 
@@ -206,6 +138,27 @@ public class Model {
                 }
         );
         thread.start();
+    }
+
+    private synchronized void shoot() {
+        for (int i = 0; i < shootingList.size(); i++) {
+            if (shootingList.get(i) == null) {
+                break;
+            }
+            int finalI = i;
+            PlayerInfo player = playerList.stream()
+                    .filter(
+                            data -> data.getPlayerName()
+                                    .equals(
+                                            shootingList.get(finalI)
+                                    )
+                    ).findFirst()
+                    .orElse(null);
+            int index = playerList.indexOf(player);
+            Point point = arrowList.get(index);
+            point.setXCoordinate(point.getXCoordinate() + ARROW_SPEED);
+            manageShot(point, player);
+        }
     }
 
     private void moveCircles() {
@@ -231,14 +184,13 @@ public class Model {
 
     private synchronized void manageShot(Point point, PlayerInfo player) {
         ShotState shotState = checkHit(point);
-        if (shotState.equals(ShotState.FLYING)) {
-            return;
-        }
-        if (shotState.equals(ShotState.BIG_SHOT)) {
-            player.incrementScore(LEFT_CIRCLE_VALUE);
-        }
-        if (shotState.equals(ShotState.SMALL_SHOT)) {
-            player.incrementScore(RIGHT_CIRCLE_VALUE);
+
+        switch (shotState) {
+            case FLYING -> {
+                return;
+            }
+            case BIG_SHOT -> player.incrementScore(LEFT_CIRCLE_VALUE);
+            case SMALL_SHOT -> player.incrementScore(RIGHT_CIRCLE_VALUE);
         }
         point.setXCoordinate(ARROW_X_START);
         if (shootingList.size() == 1) {
@@ -306,18 +258,18 @@ public class Model {
                 .orElse(null);
         assert info != null;
 
-        if(!shootingList.contains(info.getPlayerName())) {
+        if (!shootingList.contains(info.getPlayerName())) {
             shootingList.add(info.getPlayerName());
             info.incrementShots();
         }
     }
 
     public void requestStop(String playerName) {
-        if(IS_GAME_RESET) {
+        if (IS_GAME_RESET) {
             return;
         }
 
-        if(waitingList.contains(playerName)) {
+        if (waitingList.contains(playerName)) {
             waitingList.remove(playerName);
             if (waitingList.size() == 0) {
                 synchronized (this) {
@@ -330,7 +282,7 @@ public class Model {
     }
 
     public void update() {
-        for(IObserver observer: observerList) {
+        for (IObserver observer : observerList) {
             observer.update();
         }
     }

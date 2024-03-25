@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.stepanew.goodmarksman.models.Model;
 import com.stepanew.goodmarksman.models.ModelBuilder;
 import com.stepanew.goodmarksman.models.PlayerInfo;
-import com.stepanew.goodmarksman.server.response.ClientActions;
 import com.stepanew.goodmarksman.server.response.ClientRequest;
 import com.stepanew.goodmarksman.server.response.ServerResponse;
 import lombok.AccessLevel;
@@ -38,38 +37,24 @@ public class Client implements Runnable {
         serverResponse.setLineList(model.getArrowList());
         serverResponse.setWinner(model.getWinner());
 
-        System.out.println("Before write data: ");
-        System.out.println(gson.toJson(serverResponse));
-        System.out.println("After write data");
         socketMessageWrapper.writeData(gson.toJson(serverResponse));
     }
 
     @Override
     public void run() {
-        System.out.println("Client thread " + playerInfo.getPlayerName());
-
         model.addPlayer(playerInfo);
         server.broadcast();
 
         while (true) {
             String data = socketMessageWrapper.getData();
-            System.out.println("Message: " + data);
 
             ClientRequest message = gson.fromJson(data, ClientRequest.class);
 
-            if(message.getClientActions() == ClientActions.READY) {
-                System.out.println("READY " + getPlayerName());
-                model.ready(server, getPlayerName());
-            }
-
-            if(message.getClientActions() == ClientActions.SHOOT) {
-                model.requestShoot(getPlayerName());
-            }
-
-            if(message.getClientActions() == ClientActions.STOP) {
-                model.requestStop(getPlayerName());
+            switch (message.getClientActions()) {
+                case READY -> model.ready(server, getPlayerName());
+                case SHOOT -> model.requestShoot(getPlayerName());
+                case STOP -> model.requestStop(getPlayerName());
             }
         }
-
     }
 }

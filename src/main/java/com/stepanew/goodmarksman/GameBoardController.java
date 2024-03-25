@@ -22,23 +22,10 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class GameBoardController extends GameBoardView implements IObserver {
-
-    final static double CIRCLE_LEFT_SPEED = 2.5;
-    final static int FRAME = 16;
-    final static double CIRCLE_RIGHT_SPEED = 5.0;
-    final static double ARROW_SPEED = 4.0;
-    final static int LEFT_CIRCLE_VALUE = 5;
-    final static int RIGHT_CIRCLE_VALUE = 25;
-    static boolean IS_ARROW_LAUNCHED = false;
-    static boolean IS_GAME_STARTED = false;
-    static short DIRECTION_LEFT = 1;
-    static short DIRECTION_RIGHT = 1;
 
     final Model model;
     String playerName;
@@ -48,6 +35,7 @@ public class GameBoardController extends GameBoardView implements IObserver {
     final List<VBox> playersInfo;
     final List<Circle> targets;
     final List<Line> arrows;
+    final double BUTTON_SIZE = 140;
 
     {
         players = new ArrayList<>();
@@ -65,40 +53,7 @@ public class GameBoardController extends GameBoardView implements IObserver {
 
     @FXML
     void ready() {
-        /*if (!IS_GAME_STARTED) {
-            IS_GAME_STARTED = true;
-            threadPool.submit(() -> {
-                while (IS_GAME_STARTED) {
-                    Platform.runLater(() -> {
-                        moveCircles();
-                        moveArrow();
-                    });
-                    try {
-                        Thread.sleep(FRAME);
-                    } catch (InterruptedException e) {
-                        log.error(e.getMessage());
-                    }
-                }
-            });
-        }*/
         sendRequest(new ClientRequest(ClientActions.READY));
-    }
-
-    private void moveArrow() {
-        if (IS_ARROW_LAUNCHED) {
-            clearArrowsPane(model.getArrow());
-            model.moveArrow(ARROW_SPEED);
-            displayArrow(model.getArrow());
-            if (model.getArrowEndX() >= ARROWS_PANE_END || checkIntersection()) {
-                resetArrow();
-            }
-        }
-    }
-
-    private void resetArrow() {
-        clearArrowsPane(model.getArrow());
-        model.resetArrowCoordinates();
-        IS_ARROW_LAUNCHED = false;
     }
 
     @FXML
@@ -109,34 +64,6 @@ public class GameBoardController extends GameBoardView implements IObserver {
     @FXML
     void pause() {
         sendRequest(new ClientRequest(ClientActions.STOP));
-    }
-
-    private void incrementScore(int score) {
-        PlayerInfoController.setScoreCounter(getPlayersInfo().get(0) ,model.incrementScoreCounter(score));
-    }
-
-    private boolean checkIntersection() {
-        double distanceToLeft = Math.sqrt(
-                Math.pow(model.getLeftCenterX() - model.getArrowEndX(), 2)
-                        + Math.pow(model.getLeftCenterY() - model.getArrowEndY(), 2)
-        );
-
-        if (distanceToLeft <= model.getLEFT_RADIUS()) {
-            incrementScore(LEFT_CIRCLE_VALUE);
-            return true;
-        }
-
-        double distanceToRight = Math.sqrt(
-                Math.pow(model.getRightCenterX() - model.getArrowEndX(), 2)
-                        + Math.pow(model.getRightCenterY() - model.getArrowEndY(), 2)
-        );
-
-        if (distanceToRight <= model.getRIGHT_RADIUS()) {
-            incrementScore(RIGHT_CIRCLE_VALUE);
-            return true;
-        }
-
-        return false;
     }
 
     public void dataInit(SocketMessageWrapper socketMessageWrapper, String playersName) {
@@ -184,8 +111,8 @@ public class GameBoardController extends GameBoardView implements IObserver {
             for(int i = 0; i < playerList.size(); i++) {
                 if (i >= players.size()) {
                     Button button = new Button();
-                    button.setPrefHeight(140);
-                    button.setPrefWidth(140); //TODO вынести в константу
+                    button.setPrefHeight(BUTTON_SIZE);
+                    button.setPrefWidth(BUTTON_SIZE);
 
                     if (playerList.get(i).getPlayerName().equals(playerName)) {
                         button.getStyleClass().add("player-client");
@@ -207,12 +134,10 @@ public class GameBoardController extends GameBoardView implements IObserver {
             return;
         }
         Platform.runLater(() -> {
-            System.out.println("in");
             for (int i = 0; i < playerList.size(); i++) {
                 if (i >= players.size()) {
                     VBox vBox = PlayerInfoController.createPlayerInfoVBox(playerList.get(i));
                     playersInfo.add(vBox);
-                    System.out.println("New vbox");
                     addPlayerInfo(vBox);
                 } else {
                     PlayerInfoController.setPlayerName(playersInfo.get(i), playerList.get(i).getPlayerName());

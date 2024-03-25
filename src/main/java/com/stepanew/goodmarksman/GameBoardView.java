@@ -10,17 +10,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GameBoardView {
-
-    final static double CIRCLES_PANE_HIGH_HEIGHT = 330.0;
-    final static double CIRCLES_PANE_LOW_HEIGHT = 20.0;
-    final static double ARROWS_PANE_END = 400.0;
-    final static String DEFAULT_VALUE = "0";
-    final ArrayList<VBox> playersInfo = new ArrayList<>();
 
     @FXML
     VBox infoBox;
@@ -41,10 +33,6 @@ public class GameBoardView {
 
     public void displayArrow(Line arrow) {
         gameBoard.getChildren().add(arrow);
-    }
-
-    protected void clearCirclesPane(Circle circle) {
-        gameBoard.getChildren().remove(circle);
     }
 
     public void clearArrowsPane(Line arrow) {
