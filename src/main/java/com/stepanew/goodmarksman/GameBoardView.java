@@ -1,57 +1,50 @@
 package com.stepanew.goodmarksman;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GameBoardView {
 
-    final static double CIRCLES_PANE_HIGH_HEIGHT = 330.0;
-    final static double CIRCLES_PANE_LOW_HEIGHT = 20.0;
-    final static double ARROWS_PANE_END = 400.0;
-    final static String DEFAULT_VALUE = "0";
-
     @FXML
-    Label playerScoreLabel;
-
-    @FXML
-    Label shotLabel;
+    VBox infoBox;
 
     @FXML
     Pane gameBoard;
 
+    @FXML
+    VBox playersBox;
+
     public void displayCircle(Circle circle) {
         gameBoard.getChildren().add(circle);
+    }
+
+    public void removeCircle() {
+        gameBoard.getChildren().remove(gameBoard.getChildren().size() - 1);
     }
 
     public void displayArrow(Line arrow) {
         gameBoard.getChildren().add(arrow);
     }
 
-    protected void clearCirclesPane(Circle circle) {
-        gameBoard.getChildren().remove(circle);
-    }
-
     public void clearArrowsPane(Line arrow) {
         gameBoard.getChildren().remove(arrow);
     }
 
-    public void displayShotLabel(int shotCounter) {
-        shotLabel.setText(Integer.toString(shotCounter));
+    public void addPlayerInfo(VBox vBox){
+        infoBox.getChildren().add(vBox);
     }
 
-    public void displayScoreLabel(int scoreCounter) {
-        playerScoreLabel.setText(Integer.toString(scoreCounter));
-    }
-
-    public void resetScores() {
-        playerScoreLabel.setText(DEFAULT_VALUE);
-        shotLabel.setText(DEFAULT_VALUE);
+    public void addPlayersBox(Button button) {
+        playersBox.getChildren().add(button);
     }
 
 }
