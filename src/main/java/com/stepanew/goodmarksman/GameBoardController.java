@@ -40,8 +40,7 @@ public class GameBoardController extends GameBoardView implements IObserver {
     static short DIRECTION_LEFT = 1;
     static short DIRECTION_RIGHT = 1;
 
-    Model model;
-    ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    final Model model;
     String playerName;
     SocketMessageWrapper socketMessageWrapper;
     final Gson gson;
@@ -220,6 +219,7 @@ public class GameBoardController extends GameBoardView implements IObserver {
                         point.getXCoordinate() + point.getRadius(),
                         point.getYCoordinate()
                 );
+                arrows.add(arrow);
                 displayArrow(arrow);
             }
         });
@@ -291,9 +291,9 @@ public class GameBoardController extends GameBoardView implements IObserver {
                         removeCircle();
                     }
                 } else {
-                    targets.get(i).setCenterY(targets.get(i).getCenterY());
-                    targets.get(i).setCenterX(targets.get(i).getCenterX());
-                    targets.get(i).setRadius(targets.get(i).getRadius());
+                    targets.get(i).setCenterY(targetList.get(i).getYCoordinate());
+                    targets.get(i).setCenterX(targetList.get(i).getXCoordinate());
+                    targets.get(i).setRadius(targetList.get(i).getRadius());
                 }
             }
         });

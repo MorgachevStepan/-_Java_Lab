@@ -31,8 +31,6 @@ public class Model {
     List<IObserver> observerList;
 
     volatile boolean IS_GAME_RESET = true;
-
-
     final double ARROW_LENGTH = 60;
     final double ARROW_WIDTH = 5;
     final double ARROW_Y = 154;
@@ -43,6 +41,18 @@ public class Model {
     final double LEFT_RADIUS = 60;
     final double RIGHT_RADIUS = 30;
     final double RIGHT_X = 350;
+    final double CIRCLE_LEFT_SPEED = 2.5;
+    final int FRAME = 16;
+    final double CIRCLE_RIGHT_SPEED = 5.0;
+    final double ARROW_SPEED = 4.0;
+    final int LEFT_CIRCLE_VALUE = 5;
+    final int RIGHT_CIRCLE_VALUE = 25;
+    final int WINNER_SCORE = 50;
+    boolean IS_ARROW_LAUNCHED = false;
+    boolean IS_GAME_STARTED = false;
+    short DIRECTION_LEFT = 1;
+    short DIRECTION_RIGHT = 1;
+    final double ARROWS_PANE_END = 400.0;
 
     {
         winner = null;
@@ -150,11 +160,131 @@ public class Model {
         Thread thread = new Thread(
                 () -> {
                     while (true) {
+                        if (IS_GAME_RESET) {
+                            winner = null;
+                            break;
+                        }
+                        if (waitingList.size() != 0) {
+                            synchronized (this) {
+                                try {
+                                    wait();
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
+                        if (shootingList.size() != 0) {
+                            for (int i = 0; i < shootingList.size(); i++) {
+                                if (shootingList.get(i) == null) {
+                                    break;
+                                }
+                                int finalI = i;
+                                PlayerInfo player = playerList.stream()
+                                        .filter(
+                                                data -> data.getPlayerName()
+                                                        .equals(
+                                                                shootingList.get(finalI)
+                                                        )
+                                        ).findFirst()
+                                        .orElse(null);
+                                int index = playerList.indexOf(player);
+                                Point point = arrowList.get(index);
+                                point.setXCoordinate(point.getXCoordinate() + ARROW_SPEED);
+                                manageShot(point, player);
+                            }
+                        }
+                        Point bigCircle = targetList.get(0);
+                        Point smallCircle = targetList.get(1);
+
+                        if (smallCircle.getYCoordinate() <= smallCircle.getRadius() ||
+                            Y_BOUND - smallCircle.getYCoordinate() <= smallCircle.getRadius()) {
+                            DIRECTION_RIGHT *= -1;
+                        }
+                        smallCircle.setYCoordinate(smallCircle.getYCoordinate() + CIRCLE_RIGHT_SPEED * DIRECTION_RIGHT);
+
+                        if (bigCircle.getYCoordinate() <= bigCircle.getRadius() ||
+                                Y_BOUND - bigCircle.getYCoordinate() <= bigCircle.getRadius()) {
+                            DIRECTION_LEFT *= -1;
+                        }
+                        bigCircle.setYCoordinate(bigCircle.getYCoordinate() + CIRCLE_LEFT_SPEED * DIRECTION_LEFT);
+
                         server.broadcast();
+
+                        try {
+                            Thread.sleep(FRAME);
+                        } catch (InterruptedException ignored) {
+
+                        }
                     }
                 }
         );
         thread.start();
+    }
+
+    private synchronized void manageShot(Point point, PlayerInfo player) {
+        ShotState shotState = checkHit(point);
+        if (shotState.equals(ShotState.FLYING)) {
+            return;
+        }
+        if (shotState.equals(ShotState.BIG_SHOT)) {
+            player.incrementScore(LEFT_CIRCLE_VALUE);
+        }
+        if (shotState.equals(ShotState.SMALL_SHOT)) {
+            player.incrementScore(RIGHT_CIRCLE_VALUE);
+        }
+        point.setXCoordinate(ARROW_X_START);
+        if (shootingList.size() == 1) {
+            shootingList.clear();
+        } else {
+            shootingList.remove(player.getPlayerName());
+        }
+        checkWinner();
+    }
+
+    private void checkWinner() {
+        playerList.forEach(dataManager -> {
+            if (dataManager.getScoreCounter() >= WINNER_SCORE) {
+                this.winner = dataManager.getPlayerName();
+                gameReset();
+            }
+        });
+    }
+
+    private void gameReset() {
+        IS_GAME_RESET = true;
+        readyList.clear();
+        targetList.clear();
+        arrowList.clear();
+        waitingList.clear();
+        shootingList.clear();
+        playerList.forEach(PlayerInfo::reset);
+        this.initialize();
+    }
+
+    private synchronized ShotState checkHit(Point point) {
+        if (contains(targetList.get(1), point.getXCoordinate() + point.getRadius(), point.getYCoordinate())) {
+            return ShotState.SMALL_SHOT;
+        }
+        if (contains(targetList.get(0), point.getXCoordinate() + point.getRadius(), point.getYCoordinate())) {
+            return ShotState.BIG_SHOT;
+        }
+        if (point.getXCoordinate() > ARROWS_PANE_END) {
+            return ShotState.MISSED;
+        }
+        return ShotState.FLYING;
+    }
+
+    private boolean contains(Point point, double x, double y) {
+        return (
+                Math.sqrt(
+                        Math.pow(
+                                (x - point.getXCoordinate()), 2
+                        ) +
+                                Math.pow(
+                                        (y - point.getYCoordinate()), 2
+                                )
+                ) < point.getRadius()
+        );
     }
 
     public void requestShoot(String playerName) {

@@ -20,4 +20,13 @@ public class PlayerInfo {
         shotCounter++;
     }
 
+    public void incrementScore(int score) {
+        scoreCounter += score;
+    }
+
+    public void reset() {
+        shotCounter = 0;
+        scoreCounter = 0;
+    }
+
 }
