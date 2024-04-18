@@ -181,7 +181,12 @@ public class GameBoardController extends GameBoardView implements IObserver {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("У нас есть победитель!");
                 alert.setHeaderText("У нас есть победитель!");
-                alert.setContentText("Победитель : " + ((model.getWinner()).equals(this.playerName) ? "Вы" : model.getWinner()) + "!");
+                alert.setContentText(
+                        "Победитель : " +
+                                ((model.getWinner()).equals(this.playerName)
+                                        ? "Вы"
+                                        : model.getWinner()) + "!"
+                );
                 alert.showAndWait();  
             });
         }
