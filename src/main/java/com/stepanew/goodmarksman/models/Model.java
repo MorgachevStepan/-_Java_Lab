@@ -255,8 +255,7 @@ public class Model {
         PlayerInfo info = playerList.stream()
                 .filter(clientData -> clientData.getPlayerName().equals(playerName))
                 .findFirst()
-                .orElse(null);
-        assert info != null;
+                .orElseThrow();
 
         if (!shootingList.contains(info.getPlayerName())) {
             shootingList.add(info.getPlayerName());
