@@ -93,13 +93,15 @@ public class Model {
     }
 
     public void addPlayer(PlayerInfo playerInfo) {
-        playerList.add(playerInfo);
         PlayerEntity player = PlayerEntity.builder()
                 .name(playerInfo.getPlayerName())
                 .wins(0)
                 .build();
         entityList.add(player);
         playerDAO.addPlayer(player);
+        PlayerEntity playerEntity = playerDAO.getPlayer(player.getName());
+        playerInfo.setWins(playerEntity.getWins());
+        playerList.add(playerInfo);
         this.updateArrowsPosition();
     }
 
@@ -222,11 +224,19 @@ public class Model {
             if (dataManager.getScoreCounter() >= WINNER_SCORE) {
                 this.winner = dataManager.getPlayerName();
                 gameReset();
+
                 PlayerEntity player = entityList.stream()
                         .filter(entity -> entity.getName().equals(winner))
                         .findFirst()
                         .orElseThrow();
                 player.incrementWins();
+
+                PlayerInfo info = playerList.stream()
+                        .filter(data -> data.getPlayerName().equals(winner))
+                        .findFirst()
+                        .orElseThrow();
+                info.incrementWins();
+
                 playerDAO.updatePlayer(player);
             }
         });

@@ -20,9 +20,7 @@ public class PlayerDAOImpl implements PlayerDAO {
         try(Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
 
-            PlayerEntity playerEntity = (PlayerEntity) session.createCriteria(PlayerEntity.class)
-                    .add(Restrictions.eq("name", player.getName()))
-                    .uniqueResult();
+            PlayerEntity playerEntity = getPlayer(player.getName());
 
             if(playerEntity == null) {
 
@@ -60,6 +58,17 @@ public class PlayerDAOImpl implements PlayerDAO {
             result = criteria.list();
         }
 
+        return result;
+    }
+
+    @Override
+    public PlayerEntity getPlayer(String name) {
+        PlayerEntity result;
+        try(Session session = sessionFactory.openSession()) {
+            result = (PlayerEntity) session.createCriteria(PlayerEntity.class)
+                    .add(Restrictions.eq("name", name))
+                    .uniqueResult();
+        }
         return result;
     }
 }

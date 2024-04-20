@@ -13,6 +13,7 @@ public class PlayerInfo {
     String playerName;
     int shotCounter;
     int scoreCounter;
+    int wins;
 
     public PlayerInfo(String playerName) {
         this.playerName = playerName;
@@ -31,4 +32,7 @@ public class PlayerInfo {
         scoreCounter = 0;
     }
 
+    public void incrementWins() {
+        wins++;
+    }
 }

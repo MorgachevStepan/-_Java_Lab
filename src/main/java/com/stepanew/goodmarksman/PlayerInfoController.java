@@ -22,6 +22,9 @@ public class PlayerInfoController {
         Label scoreCounterLabel = new Label("Количество очков");
         scoreCounterLabel.getStyleClass().add("text-label");
 
+        Label winsLabel = new Label("Количество побед");
+        winsLabel.getStyleClass().add("text-label");
+
         Text playerNameText = new Text(playerInfo.getPlayerName());
         playerNameText.getStyleClass().add("text");
 
@@ -31,12 +34,18 @@ public class PlayerInfoController {
         Text scoreCounterText = new Text(Integer.toString(playerInfo.getScoreCounter()));
         scoreCounterText.getStyleClass().add("text");
 
+        Text winsText = new Text(Integer.toString(playerInfo.getWins()));
+        winsText.getStyleClass().add("text");
+
+
         vBox.getChildren().add(playerNameLabel);
         vBox.getChildren().add(playerNameText);
         vBox.getChildren().add(shotCounterLabel);
         vBox.getChildren().add(shotCounterText);
         vBox.getChildren().add(scoreCounterLabel);
         vBox.getChildren().add(scoreCounterText);
+        vBox.getChildren().add(winsLabel);
+        vBox.getChildren().add(winsText);
 
         return vBox;
     }
@@ -54,6 +63,11 @@ public class PlayerInfoController {
     public static void setScoreCounter (VBox vBox, int scoreCounter){
         Text text = (Text) vBox.getChildren().get(5);
         text.setText(Integer.toString(scoreCounter));
+    }
+
+    public static void setWinCounter (VBox vBox, int wins){
+        Text text = (Text) vBox.getChildren().get(7);
+        text.setText(Integer.toString(wins));
     }
 
 }

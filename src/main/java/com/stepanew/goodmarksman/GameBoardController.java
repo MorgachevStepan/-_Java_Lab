@@ -192,6 +192,7 @@ public class GameBoardController extends GameBoardView implements IObserver {
                     PlayerInfoController.setPlayerName(playersInfo.get(i), playerList.get(i).getPlayerName());
                     PlayerInfoController.setShotCounter(playersInfo.get(i), playerList.get(i).getShotCounter());
                     PlayerInfoController.setScoreCounter(playersInfo.get(i), playerList.get(i).getScoreCounter());
+                    PlayerInfoController.setWinCounter(playersInfo.get(i), playerList.get(i).getWins());
                 }
             }
         });

@@ -7,5 +7,6 @@ public interface PlayerDAO {
     void addPlayer(PlayerEntity player);
     void updatePlayer(PlayerEntity player);
     List<PlayerEntity> getAllPlayers();
+    PlayerEntity getPlayer(String name);
 
 }
