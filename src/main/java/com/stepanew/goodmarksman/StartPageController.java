@@ -53,14 +53,13 @@ public class StartPageController {
                         () -> {
                             while (true) {
                                 String data = socketMessageWrapper.getData();
-                                System.out.println("Response: " + data);
                                 Gson gson = new Gson();
                                 ServerResponse answer = gson.fromJson(data, ServerResponse.class);
-                                System.out.println("Answer " + answer);
                                 model.setPlayerList(answer.getPlayerInfoList());
                                 model.setTargetList(answer.getCircleList());
                                 model.setArrowList(answer.getLineList());
                                 model.setWinner(answer.getWinner());
+                                model.setEntityList(answer.getEntityList());
                                 model.update();
                             }
                         }

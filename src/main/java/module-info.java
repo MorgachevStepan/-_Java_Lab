@@ -10,11 +10,11 @@ module com.stepanew.goodmarksman {
     requires java.naming;
     requires java.sql;
 
-    opens com.stepanew.goodmarksman to javafx.fxml, org.postgresql.jdbc;
+    opens com.stepanew.goodmarksman to javafx.fxml, org.postgresql.jdbc, com.google.gson;
     opens com.stepanew.goodmarksman.models to javafx.fxml, com.google.gson;
-    opens com.stepanew.goodmarksman.server to javafx.fxml, com.google.gson, org.postgresql.jdbc;
+    opens com.stepanew.goodmarksman.server to javafx.fxml, com.google.gson;
     opens com.stepanew.goodmarksman.server.response to com.google.gson;
-    opens com.stepanew.goodmarksman.store to java.persistence, org.hibernate.orm.core;
+    opens com.stepanew.goodmarksman.store to java.persistence, org.hibernate.orm.core, com.google.gson;
 
     exports com.stepanew.goodmarksman;
     exports com.stepanew.goodmarksman.models;

@@ -1,13 +1,14 @@
 package com.stepanew.goodmarksman.store;
 
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Builder
 @Entity
 @Table(name = "player")
 public class PlayerEntity {
@@ -23,8 +24,8 @@ public class PlayerEntity {
     @Column(name = "wins")
     private Integer wins;
 
-    public PlayerEntity(String name) {
-        this.name = name;
+    public void incrementWins() {
+        wins++;
     }
 
 }

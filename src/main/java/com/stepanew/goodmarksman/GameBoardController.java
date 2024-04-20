@@ -9,12 +9,18 @@ import com.stepanew.goodmarksman.server.IObserver;
 import com.stepanew.goodmarksman.server.SocketMessageWrapper;
 import com.stepanew.goodmarksman.server.response.ClientActions;
 import com.stepanew.goodmarksman.server.response.ClientRequest;
+import com.stepanew.goodmarksman.store.PlayerEntity;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import javafx.scene.shape.Circle;
 import lombok.AccessLevel;
@@ -30,6 +36,7 @@ public class GameBoardController extends GameBoardView implements IObserver {
     final Model model;
     String playerName;
     SocketMessageWrapper socketMessageWrapper;
+    boolean IS_SHOW_TABLE;
     final Gson gson;
     final List<Button> players;
     final List<VBox> playersInfo;
@@ -44,6 +51,7 @@ public class GameBoardController extends GameBoardView implements IObserver {
         arrows = new ArrayList<>();
         model = ModelBuilder.build();
         gson = new Gson();
+        IS_SHOW_TABLE = false;
     }
 
 
@@ -66,6 +74,12 @@ public class GameBoardController extends GameBoardView implements IObserver {
         sendRequest(new ClientRequest(ClientActions.STOP));
     }
 
+    @FXML
+    void tableScore() {
+        sendRequest(new ClientRequest(ClientActions.SCORE_TABLE));
+        IS_SHOW_TABLE = true;
+    }
+
     public void dataInit(SocketMessageWrapper socketMessageWrapper, String playersName) {
         this.socketMessageWrapper = socketMessageWrapper;
         this.playerName = playersName;
@@ -82,6 +96,41 @@ public class GameBoardController extends GameBoardView implements IObserver {
         updatePlayerInfo(model.getPlayerList());
         updatePlayers(model.getPlayerList());
         updateArrows(model.getArrowList());
+
+        if (IS_SHOW_TABLE && model.getEntityList() != null && model.getEntityList().size() != 0) {
+            showScoreTable();
+            IS_SHOW_TABLE = false;
+        }
+    }
+
+    private void showScoreTable() {
+        Platform.runLater(() -> {
+            TableView<PlayerEntity> tableView = new TableView<>();
+
+            TableColumn<PlayerEntity, String> column1 =
+                    new TableColumn<>("Имя");
+
+            column1.setCellValueFactory(
+                    new PropertyValueFactory<>("name"));
+
+            TableColumn<PlayerEntity, String> column2 =
+                    new TableColumn<>("Победы");
+
+            column2.setCellValueFactory(
+                    new PropertyValueFactory<>("wins"));
+
+            tableView.getColumns().add(column1);
+            tableView.getColumns().add(column2);
+
+            model.getEntityList().forEach(tableView.getItems()::add);
+
+            VBox vbox = new VBox(tableView);
+            Scene scene = new Scene(vbox);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Таблица лидеров");
+            stage.show();
+        });
     }
 
     private void updateArrows(List<Point> arrowList) {

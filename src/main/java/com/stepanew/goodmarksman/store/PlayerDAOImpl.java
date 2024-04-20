@@ -1,12 +1,14 @@
 package com.stepanew.goodmarksman.store;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class PlayerDAOImpl implements PlayerDAO {
@@ -16,30 +18,48 @@ public class PlayerDAOImpl implements PlayerDAO {
     @Override
     public void addPlayer(PlayerEntity player) {
         try(Session session = sessionFactory.openSession()) {
-            System.out.println("Adding" + player.getName());
             Transaction transaction = session.beginTransaction();
-            session.merge(player);
+
+            PlayerEntity playerEntity = (PlayerEntity) session.createCriteria(PlayerEntity.class)
+                    .add(Restrictions.eq("name", player.getName()))
+                    .uniqueResult();
+
+            if(playerEntity == null) {
+
+                session.merge(player);
+                transaction.commit();
+            }
+        }
+    }
+
+    @Override
+    public void updatePlayer(PlayerEntity player) {
+        try(Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            PlayerEntity oldPlayer = (PlayerEntity) session.createCriteria(PlayerEntity.class)
+                    .add(Restrictions.eq("id", player.getId()))
+                    .uniqueResult();
+
+            if(oldPlayer != null) {
+                oldPlayer.setWins(player.getWins());
+
+                session.update(oldPlayer);
+            }
+
             transaction.commit();
         }
     }
 
     @Override
-    public Optional<Integer> getPlayerWins(String name) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void setPlayerWins(PlayerEntity player) {
-
-    }
-
-    @Override
-    public void incrementPlayerWins(PlayerEntity player) {
-
-    }
-
-    @Override
     public List<PlayerEntity> getAllPlayers() {
-        return null;
+        List<PlayerEntity> result;
+
+        try(Session session = sessionFactory.openSession()) {
+            Criteria criteria = session.createCriteria(PlayerEntity.class)
+                    .addOrder(Order.desc("wins"));
+            result = criteria.list();
+        }
+
+        return result;
     }
 }

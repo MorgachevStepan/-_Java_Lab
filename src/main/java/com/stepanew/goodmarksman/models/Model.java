@@ -4,7 +4,6 @@ import com.stepanew.goodmarksman.GameBoardController;
 import com.stepanew.goodmarksman.server.IObserver;
 import com.stepanew.goodmarksman.server.Server;
 import com.stepanew.goodmarksman.store.PlayerDAO;
-import com.stepanew.goodmarksman.store.PlayerDAOBuilder;
 import com.stepanew.goodmarksman.store.PlayerEntity;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -27,6 +26,9 @@ public class Model {
     List<String> waitingList;
     List<String> shootingList;
     List<IObserver> observerList;
+    List<PlayerEntity> entityList;
+
+    final PlayerDAO playerDAO;
 
     volatile boolean IS_GAME_RESET = true;
     final double ARROW_LENGTH = 60;
@@ -45,7 +47,7 @@ public class Model {
     final double ARROW_SPEED = 4.0;
     final int LEFT_CIRCLE_VALUE = 5;
     final int RIGHT_CIRCLE_VALUE = 25;
-    final int WINNER_SCORE = 50;
+    final int WINNER_SCORE = 5;
     short DIRECTION_LEFT = 1;
     short DIRECTION_RIGHT = 1;
     final double ARROWS_PANE_END = 400.0;
@@ -60,6 +62,11 @@ public class Model {
         shootingList = new ArrayList<>();
         waitingList = new ArrayList<>();
         observerList = new ArrayList<>();
+        entityList = new ArrayList<>();
+    }
+
+    public Model(PlayerDAO playerDAO) {
+        this.playerDAO = playerDAO;
     }
 
     public void initialize() {
@@ -87,12 +94,16 @@ public class Model {
 
     public void addPlayer(PlayerInfo playerInfo) {
         playerList.add(playerInfo);
+        PlayerEntity player = PlayerEntity.builder()
+                .name(playerInfo.getPlayerName())
+                .wins(0)
+                .build();
+        entityList.add(player);
+        playerDAO.addPlayer(player);
         this.updateArrowsPosition();
     }
 
     public void ready(Server server, String playerName) {
-        PlayerDAO playerDAO = PlayerDAOBuilder.build();
-        playerDAO.addPlayer(new PlayerEntity(playerName));
         if (readyList.isEmpty()) {
             readyList.add(playerName);
             return;
@@ -211,6 +222,12 @@ public class Model {
             if (dataManager.getScoreCounter() >= WINNER_SCORE) {
                 this.winner = dataManager.getPlayerName();
                 gameReset();
+                PlayerEntity player = entityList.stream()
+                        .filter(entity -> entity.getName().equals(winner))
+                        .findFirst()
+                        .orElseThrow();
+                player.incrementWins();
+                playerDAO.updatePlayer(player);
             }
         });
     }
@@ -293,5 +310,10 @@ public class Model {
 
     public void addObserver(GameBoardController gameBoardController) {
         observerList.add(gameBoardController);
+    }
+
+    public void updateScoreTable(Server server) {
+        entityList = playerDAO.getAllPlayers();
+        server.broadcast();
     }
 }
