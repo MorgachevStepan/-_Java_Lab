@@ -3,6 +3,9 @@ package com.stepanew.goodmarksman.models;
 import com.stepanew.goodmarksman.GameBoardController;
 import com.stepanew.goodmarksman.server.IObserver;
 import com.stepanew.goodmarksman.server.Server;
+import com.stepanew.goodmarksman.store.PlayerDAO;
+import com.stepanew.goodmarksman.store.PlayerDAOBuilder;
+import com.stepanew.goodmarksman.store.PlayerEntity;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -88,6 +91,8 @@ public class Model {
     }
 
     public void ready(Server server, String playerName) {
+        PlayerDAO playerDAO = PlayerDAOBuilder.build();
+        playerDAO.addPlayer(new PlayerEntity(playerName));
         if (readyList.isEmpty()) {
             readyList.add(playerName);
             return;
