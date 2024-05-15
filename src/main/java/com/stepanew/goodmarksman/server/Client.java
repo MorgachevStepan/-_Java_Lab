@@ -38,7 +38,7 @@ public class Client implements Runnable {
         serverResponse.setWinner(model.getWinner());
         serverResponse.setEntityList(model.getEntityList());
 
-        socketMessageWrapper.writeData(gson.toJson(serverResponse));
+        socketMessageWrapper.sendMessage(gson.toJson(serverResponse));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class Client implements Runnable {
         server.broadcast();
 
         while (true) {
-            String data = socketMessageWrapper.getData();
+            String data = socketMessageWrapper.getMessage();
 
             ClientRequest message = gson.fromJson(data, ClientRequest.class);
 

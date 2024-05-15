@@ -86,7 +86,7 @@ public class GameBoardController extends GameBoardView implements IObserver {
     }
 
     private void sendRequest(ClientRequest request) {
-        socketMessageWrapper.writeData(gson.toJson(request));
+        socketMessageWrapper.sendMessage(gson.toJson(request));
     }
 
     @Override

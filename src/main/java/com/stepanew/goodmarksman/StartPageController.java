@@ -52,7 +52,7 @@ public class StartPageController {
                 new Thread(
                         () -> {
                             while (true) {
-                                String data = socketMessageWrapper.getData();
+                                String data = socketMessageWrapper.getMessage();
                                 Gson gson = new Gson();
                                 ServerResponse answer = gson.fromJson(data, ServerResponse.class);
                                 model.setPlayerList(answer.getPlayerInfoList());
