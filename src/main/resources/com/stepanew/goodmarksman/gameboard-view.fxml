@@ -41,6 +41,14 @@
                  onAction="#pause"
                  text="Pause"
          />
+         <Button
+                 fx:id="tableScoreButton"
+                 layoutX="134.0"
+                 layoutY="25.0"
+                 mnemonicParsing="false"
+                 onAction="#tableScore"
+                 text="Table Score"
+         />
       </HBox>
    </bottom>
    <center>

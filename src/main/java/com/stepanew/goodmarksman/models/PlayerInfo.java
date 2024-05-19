@@ -2,15 +2,18 @@ package com.stepanew.goodmarksman.models;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 public class PlayerInfo {
 
     String playerName;
     int shotCounter;
     int scoreCounter;
+    int wins;
 
     public PlayerInfo(String playerName) {
         this.playerName = playerName;
@@ -29,4 +32,7 @@ public class PlayerInfo {
         scoreCounter = 0;
     }
 
+    public void incrementWins() {
+        wins++;
+    }
 }

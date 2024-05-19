@@ -36,8 +36,9 @@ public class Client implements Runnable {
         serverResponse.setCircleList(model.getTargetList());
         serverResponse.setLineList(model.getArrowList());
         serverResponse.setWinner(model.getWinner());
+        serverResponse.setEntityList(model.getEntityList());
 
-        socketMessageWrapper.writeData(gson.toJson(serverResponse));
+        socketMessageWrapper.sendMessage(gson.toJson(serverResponse));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class Client implements Runnable {
         server.broadcast();
 
         while (true) {
-            String data = socketMessageWrapper.getData();
+            String data = socketMessageWrapper.getMessage();
 
             ClientRequest message = gson.fromJson(data, ClientRequest.class);
 
@@ -54,6 +55,7 @@ public class Client implements Runnable {
                 case READY -> model.ready(server, getPlayerName());
                 case SHOOT -> model.requestShoot(getPlayerName());
                 case STOP -> model.requestStop(getPlayerName());
+                case SCORE_TABLE -> model.updateScoreTable(server);
             }
         }
     }
